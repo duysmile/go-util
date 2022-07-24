@@ -50,4 +50,12 @@ func main() {
 	no6.SetLeft(no5)
 
 	fmt.Println(avl.RightLeftRotation(no4) == no5)
+
+	// AVL Tree
+	tree := &avl.AVL{}
+	tree.Add(3)
+	tree.Add(1)
+	tree.Add(2)
+
+	tree.Display()
 }

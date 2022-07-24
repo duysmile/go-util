@@ -90,3 +90,63 @@ func RightLeftRotation(node *bst.Node) *bst.Node {
 
 	return LeftRotation(node)
 }
+
+type AVL struct {
+	bst.BST
+}
+
+// balanceFactor calculates subtraction of left-subtree's height and right-subtree's height
+func (t *AVL) balanceFactor(node *bst.Node) int {
+	return t.GetHeight(node.Left()) - t.GetHeight(node.Right())
+}
+
+func (t *AVL) balance(node *bst.Node) *bst.Node {
+	nodeBalanceFactor := t.balanceFactor(node)
+
+	if nodeBalanceFactor > 1 {
+		leftBalanceFactor := t.balanceFactor(node.Left())
+		if leftBalanceFactor > 0 {
+			return RightRotation(node)
+		} else if leftBalanceFactor < 0 {
+			return LeftRightRotation(node)
+		}
+	} else if nodeBalanceFactor < -1 {
+		rightBalanceFactor := t.balanceFactor(node.Right())
+		if rightBalanceFactor < 0 {
+			return LeftRotation(node)
+		} else if rightBalanceFactor > 0 {
+			return RightLeftRotation(node)
+		}
+	}
+
+	return node
+}
+
+func (t *AVL) Add(value int) *bst.Node {
+	node := t.BST.Add(value)
+	t.SetRoot(t.balanceUpstream(node))
+	return node
+}
+
+func (t *AVL) Remove(value int) bool {
+	removeNode := t.Find(value)
+	if removeNode != nil {
+		t.BST.Remove(value)
+		t.SetRoot(t.balanceUpstream(removeNode.Parent()))
+		return true
+	}
+
+	return false
+}
+
+func (t *AVL) balanceUpstream(node *bst.Node) *bst.Node {
+	currentNode := node
+	var newParent *bst.Node
+	for {
+		if currentNode == nil {
+			return newParent
+		}
+		newParent = t.balance(currentNode)
+		currentNode = currentNode.Parent()
+	}
+}

@@ -62,14 +62,22 @@ type BST struct {
 	root *Node
 }
 
-func (t *BST) Add(value int) {
+func (t *BST) Root() *Node {
+	return t.root
+}
+
+func (t *BST) SetRoot(node *Node) {
+	t.root = node
+}
+
+func (t *BST) Add(value int) *Node {
 	node := &Node{
 		value: value,
 	}
 
 	if t.root == nil {
 		t.root = node
-		return
+		return node
 	}
 
 	currentNode := t.root
@@ -92,6 +100,8 @@ func (t *BST) Add(value int) {
 			}
 		}
 	}
+
+	return node
 }
 
 func (t *BST) Find(value int) *Node {
@@ -154,19 +164,19 @@ func (t *BST) getLeftMostNode(node *Node) *Node {
 	}
 }
 
-func (t *BST) getHeight(node *Node) int {
+func (t *BST) GetHeight(node *Node) int {
 	if node == nil {
 		return -1
 	}
 
 	height := math.Max(
-		float64(t.getHeight(node.left)+1),
-		float64(t.getHeight(node.right)+1),
+		float64(t.GetHeight(node.left)+1),
+		float64(t.GetHeight(node.right)+1),
 	)
 	return int(height)
 }
 
-func (t *BST) getLevel(node *Node) int {
+func (t *BST) GetLevel(node *Node) int {
 	if node == nil {
 		return -1
 	}
@@ -200,12 +210,12 @@ func (t *BST) Display() {
 		currentNode := listNode[0]
 		listNode = listNode[1:]
 
-		if level < t.getLevel(currentNode) {
+		if level < t.GetLevel(currentNode) {
 			fmt.Println("")
 			level++
 		}
 
-		fmt.Printf("%v[height: %v] ", currentNode.value, t.getHeight(currentNode))
+		fmt.Printf("%v[height: %v] ", currentNode.value, t.GetHeight(currentNode))
 		if currentNode.left != nil {
 			listNode = append(listNode, currentNode.left)
 		}
