@@ -83,20 +83,20 @@ func (t *BST) Add(value int) *Node {
 	currentNode := t.root
 	for {
 		if currentNode.value < node.value {
-			if currentNode.right == nil {
-				node.parent = currentNode
-				currentNode.right = node
+			if currentNode.Right() == nil {
+				node.SetParent(currentNode)
+				currentNode.SetRight(node)
 				break
 			} else {
-				currentNode = currentNode.right
+				currentNode = currentNode.Right()
 			}
 		} else if currentNode.value > node.value {
-			if currentNode.left == nil {
-				node.parent = currentNode
-				currentNode.left = node
+			if currentNode.Left() == nil {
+				node.SetParent(currentNode)
+				currentNode.SetLeft(node)
 				break
 			} else {
-				currentNode = currentNode.left
+				currentNode = currentNode.Left()
 			}
 		}
 	}
@@ -112,9 +112,9 @@ func (t *BST) Find(value int) *Node {
 		}
 
 		if node.value > value {
-			node = node.left
+			node = node.Left()
 		} else {
-			node = node.right
+			node = node.Right()
 		}
 	}
 }
@@ -133,10 +133,10 @@ func (t *BST) Remove(value int) bool {
 		t.root.parent = nil
 	} else {
 		parent := removeNode.parent
-		if parent.left == removeNode {
-			parent.left = nodeToReplace
+		if parent.Left() == removeNode {
+			parent.SetLeft(nodeToReplace)
 		} else {
-			parent.right = nodeToReplace
+			parent.SetRight(nodeToReplace)
 		}
 	}
 
@@ -145,22 +145,22 @@ func (t *BST) Remove(value int) bool {
 
 // getReplaceNode get and adjust node to replace a removed node
 func (t *BST) getReplaceNode(node *Node) *Node {
-	if node.right != nil {
-		leftMostNode := t.getLeftMostNode(node.right)
-		leftMostNode.left = node.left
-		return node.right
+	if node.Right() != nil {
+		leftMostNode := t.getLeftMostNode(node.Right())
+		leftMostNode.SetLeft(node.Left())
+		return node.Right()
 	}
 
-	return node.left
+	return node.Left()
 }
 
 func (t *BST) getLeftMostNode(node *Node) *Node {
 	for {
-		if node.left == nil {
+		if node.Left() == nil {
 			return node
 		}
 
-		node = node.left
+		node = node.Left()
 	}
 }
 
@@ -170,8 +170,8 @@ func (t *BST) GetHeight(node *Node) int {
 	}
 
 	height := math.Max(
-		float64(t.GetHeight(node.left)+1),
-		float64(t.GetHeight(node.right)+1),
+		float64(t.GetHeight(node.Left())+1),
+		float64(t.GetHeight(node.Right())+1),
 	)
 	return int(height)
 }
@@ -216,11 +216,11 @@ func (t *BST) Display() {
 		}
 
 		fmt.Printf("%v[height: %v] ", currentNode.value, t.GetHeight(currentNode))
-		if currentNode.left != nil {
-			listNode = append(listNode, currentNode.left)
+		if currentNode.Left() != nil {
+			listNode = append(listNode, currentNode.Left())
 		}
-		if currentNode.right != nil {
-			listNode = append(listNode, currentNode.right)
+		if currentNode.Right() != nil {
+			listNode = append(listNode, currentNode.Right())
 		}
 	}
 }

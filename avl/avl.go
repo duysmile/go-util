@@ -19,8 +19,6 @@ func resetParent(parent, oldChild, newChild *bst.Node) {
 	} else {
 		newChild.SetParent(nil)
 	}
-
-	oldChild.SetParent(newChild)
 }
 
 func LeftRotation(node *bst.Node) *bst.Node {
@@ -32,9 +30,11 @@ func LeftRotation(node *bst.Node) *bst.Node {
 	if right == nil {
 		return nil
 	}
+
+	previousLeft := right.Left()
 	resetParent(node.Parent(), node, right)
 	right.SetLeft(node)
-	node.SetRight(nil)
+	node.SetRight(previousLeft)
 	return right
 }
 
@@ -47,9 +47,11 @@ func RightRotation(node *bst.Node) *bst.Node {
 	if left == nil {
 		return nil
 	}
+
+	previousRight := left.Right()
 	resetParent(node.Parent(), node, left)
 	left.SetRight(node)
-	node.SetLeft(nil)
+	node.SetLeft(previousRight)
 	return left
 }
 
