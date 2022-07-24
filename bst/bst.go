@@ -14,6 +14,50 @@ type Node struct {
 	value  int
 }
 
+func (n *Node) Left() *Node {
+	return n.left
+}
+
+func (n *Node) SetLeft(left *Node) {
+	if left != nil {
+		left.SetParent(n)
+	}
+	n.left = left
+}
+
+func (n *Node) Right() *Node {
+	return n.right
+}
+
+func (n *Node) SetRight(right *Node) {
+	if right != nil {
+		right.SetParent(n)
+	}
+	n.right = right
+}
+
+func (n *Node) Parent() *Node {
+	return n.parent
+}
+
+func (n *Node) SetParent(parent *Node) {
+	n.parent = parent
+}
+
+func (n *Node) Value() int {
+	return n.value
+}
+
+func (n *Node) SetValue(value int) {
+	n.value = value
+}
+
+func NewNode(value int) *Node {
+	return &Node{
+		value: value,
+	}
+}
+
 type BST struct {
 	root *Node
 }
