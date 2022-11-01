@@ -6,9 +6,11 @@ import (
 	"strconv"
 )
 
+// HashFunc
 // we need a function to convert []byte to uint32 to put it in ring hash
 type HashFunc func([]byte) uint32
 
+// Hash
 // define a ring hash
 type Hash struct {
 	hashFunc HashFunc
@@ -58,16 +60,16 @@ func (h *Hash) Add(key string) {
 }
 
 func (h *Hash) Remove(key string) {
-	shoudlRemoveValues := make(map[int]bool)
+	shouldRemoveValues := make(map[int]bool)
 	for i := 0; i < h.replicas; i++ {
 		hashValue := int(h.hashFunc([]byte(key + strconv.Itoa(i))))
-		shoudlRemoveValues[hashValue] = true
+		shouldRemoveValues[hashValue] = true
 		delete(h.hashMap, hashValue)
 	}
 
 	newKeys := make([]int, 0, len(h.keys))
 	for _, key := range h.keys {
-		if !shoudlRemoveValues[key] {
+		if !shouldRemoveValues[key] {
 			newKeys = append(newKeys, key)
 		}
 	}
