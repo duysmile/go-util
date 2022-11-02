@@ -1,37 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"github.com/duysmile/go-util/workerpool"
+	"log"
+	"time"
 )
 
 func main() {
 	pool := workerpool.NewPool(workerpool.Config{
-		NumOfWorker: 2,
+		IdleWorker: 2,
+		MaxWorker:  4,
 	})
 
-	pool.RegisterHandler(func(input interface{}) workerpool.Response {
-		fmt.Println("handling: ", input)
-		return workerpool.Response{
-			Data:  input,
-			Error: nil,
-		}
-	})
+	go pool.Run()
 
-	iChan, oChan := pool.Run()
-
-	data := []int{1, 2, 3, 4, 5, 6}
-	go func(pool *workerpool.Pool, data []int) {
-		for _, i := range data {
-			iChan <- i
-		}
-		pool.Finish()
-	}(pool, data)
-
-	results := make([]interface{}, 0, len(data))
-	for result := range oChan {
-		results = append(results, result.Data)
+	for i := 0; i < 10; i++ {
+		i := i
+		pool.Submit(func() {
+			log.Println("handling: ", i)
+			time.Sleep(2 * time.Second)
+		})
 	}
 
-	fmt.Println("results: ", results)
+	//time.Sleep(20 * time.Second)
+	pool.Finish(true)
+	log.Println("Done")
 }

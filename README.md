@@ -5,3 +5,4 @@ Some utils in Go
 - Least recently used (LRU) Cache: `lru.go`
 - Consistent hash: `consistenthash.go`
 - Worker pool: `pool.go`
+  - Reference: https://github.com/gammazero/workerpool
